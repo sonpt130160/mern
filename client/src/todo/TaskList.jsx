@@ -1,35 +1,43 @@
 import React from "react";
-import TodoList from "./TodoList";
 import AddTask from "./AddTask";
+import { getAllTodosService } from "../services/todoService";
 
 export default class TaskList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      task: ["task 1", "task 2"],
+      ListTask: null,
     };
   }
 
-  addTask = (name) => {
-    this.setState({
-      task: [...this.state.task, name],
+  componentDidMount() {
+    this.getAllData();
+  }
+
+  getAllData = () => {
+    getAllTodosService().then((res) => {
+      this.setState({
+        ListTask: res.data,
+      });
+      console.log(res);
     });
   };
+
   handleDeleteTask = (index) => {
-    const filterTask = this.state.task;
+    const filterTask = this.state.ListTask;
     // eslint-disable-next-line no-const-assign
-    const taskFilter = filterTask.filter((item,idx)=>idx !== index)
-    console.log(taskFilter)
+    const taskFilter = filterTask.filter((item, idx) => idx !== index);
+    console.log(taskFilter);
     this.setState({
       task: taskFilter,
     });
   };
 
   render() {
-    const {task} = this.state
+    const { ListTask } = this.state;
     return (
       <>
-        <AddTask addTask={this.addTask} />
+        {/* <AddTask ListTask={this.state.ListTask} getAllData={this.getAllData} /> */}
         <div>
           <h2>Task List</h2>
           <table>
@@ -39,19 +47,22 @@ export default class TaskList extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {task.map((name, index) =>{
-                return (
-                  <div  key={index}>
-                    <TodoList name={name} />
-                    <button
-                      type="submit"
-                      onClick={() => this.handleDeleteTask(index)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                );
-              })}
+              {ListTask &&
+                ListTask.map((item, index) => {
+                  return (
+                    <tr key={item._id}>
+                      <td>
+                        {item.task}{" "}
+                        <button
+                          type="submit"
+                          onClick={() => this.handleDeleteTask(index)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </div>
