@@ -1,6 +1,6 @@
 import React from "react";
 import AddTask from "./AddTask";
-import { getAllTodosService } from "../services/todoService";
+import { deleteTodoService, getAllTodosService } from "../services/todoService";
 
 export default class TaskList extends React.Component {
   constructor(props) {
@@ -23,21 +23,16 @@ export default class TaskList extends React.Component {
     });
   };
 
-  handleDeleteTask = (index) => {
-    const filterTask = this.state.ListTask;
-    // eslint-disable-next-line no-const-assign
-    const taskFilter = filterTask.filter((item, idx) => idx !== index);
-    console.log(taskFilter);
-    this.setState({
-      task: taskFilter,
-    });
+  handleDeleteTask = async (task) => {
+    deleteTodoService(task._id);
+    this.getAllData();
   };
 
   render() {
     const { ListTask } = this.state;
     return (
       <>
-        {/* <AddTask ListTask={this.state.ListTask} getAllData={this.getAllData} /> */}
+        <AddTask ListTask={this.state.ListTask} getAllData={this.getAllData} />
         <div>
           <h2>Task List</h2>
           <table>
@@ -55,7 +50,9 @@ export default class TaskList extends React.Component {
                         {item.task}{" "}
                         <button
                           type="submit"
-                          onClick={() => this.handleDeleteTask(index)}
+                          onClick={() => {
+                            this.handleDeleteTask(item);
+                          }}
                         >
                           Delete
                         </button>

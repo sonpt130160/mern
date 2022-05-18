@@ -22,7 +22,7 @@ export default class AddTask extends React.Component {
 
   isChangeName = (e) => {
     this.setState({
-      name: e.target.value,
+      task: e.target.value,
     });
   };
 
@@ -32,13 +32,6 @@ export default class AddTask extends React.Component {
 
   componentDidMount() {
     console.log("dut mao");
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    if (this.state.name !== this.state.nextState) {
-      return true;
-    }
-    return false;
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -55,6 +48,7 @@ export default class AddTask extends React.Component {
 
   render() {
     console.log("ren do");
+    let { task } = this.state;
     return (
       <>
         <div>
@@ -64,6 +58,7 @@ export default class AddTask extends React.Component {
             <input
               type="text"
               placeholder="Enter name of task"
+              value={task}
               onChange={(event) => this.isChangeName(event)}
             />
           </div>
